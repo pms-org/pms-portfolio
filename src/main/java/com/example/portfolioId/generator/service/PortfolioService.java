@@ -24,8 +24,10 @@ public class PortfolioService {
         InvestorDetails investor = new InvestorDetails();
         investor.setPortfolioId(newId);
         investor.setName(req.getName());
-        investor.setPhone(req.getPhone());
+        investor.setNumber(req.getNumber());
         investor.setAddress(req.getAddress());
+
+        System.out.print(investor);
 
         investorRepo.save(investor);
 

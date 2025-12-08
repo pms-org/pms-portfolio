@@ -16,6 +16,6 @@ public class InvestorDetails {
     private UUID portfolioId;
 
     private String name;
-    private String phone;
+    private Long number;
     private String address;
 }
