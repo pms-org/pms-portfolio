@@ -8,6 +8,12 @@ services:
       - "8095:8095"
     environment:
       SERVER_PORT: 8095
-      SPRING_DATASOURCE_URL: jdbc:h2:mem:portfolio-db
-      SPRING_DATASOURCE_USERNAME: sa
-      SPRING_DATASOURCE_PASSWORD:
+
+      DB_URL: jdbc:postgresql://db-instance-pms.cvk4yqey0ex7.us-east-2.rds.amazonaws.com:5432/pms_portfolio_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: PMS.2025
+    networks:
+      - portfolio-net
+
+networks:
+  portfolio-net:

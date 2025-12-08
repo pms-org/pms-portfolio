@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PortfolioService {
 
-    private final InvestorDetailsRepository investorRepo;
+    private InvestorDetailsRepository investorRepo;
 
     public PortfolioResponse createPortfolio(PortfolioRequest req) {
 
@@ -26,8 +26,6 @@ public class PortfolioService {
         investor.setName(req.getName());
         investor.setNumber(req.getNumber());
         investor.setAddress(req.getAddress());
-
-        System.out.print(investor);
 
         investorRepo.save(investor);
 
