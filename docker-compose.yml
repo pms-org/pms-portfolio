@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  portfolio-id-generator:
+    build: .
+    container_name: portfolio-id-generator
+    ports:
+      - "8095:8095"
+    environment:
+      SERVER_PORT: 8095
+      SPRING_DATASOURCE_URL: jdbc:h2:mem:portfolio-db
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD:
