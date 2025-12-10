@@ -2,6 +2,7 @@ package  com.example.portfolioId.generator.service;
 
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.portfolioId.generator.dto.PortfolioRequest;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PortfolioService {
 
+    @Autowired
     private InvestorDetailsRepository investorRepo;
 
     public PortfolioResponse createPortfolio(PortfolioRequest req) {
