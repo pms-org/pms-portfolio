@@ -2,13 +2,14 @@ package com.example.portfolioId.generator.entity;
 
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "investor_details")
+@Table(name = "portfolio_investor_details")
 @Data
 public class InvestorDetails {
 
@@ -16,6 +17,7 @@ public class InvestorDetails {
     private UUID portfolioId;
 
     private String name;
-    private Long number;
+    @Column(name = "phone_number") 	
+    private Long phoneNumber;
     private String address;
 }
