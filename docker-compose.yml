@@ -1,9 +1,9 @@
 version: "3.9"
 
 services:
-  portfolio-id-generator:
+  portfolio-service:
     build: .
-    container_name: portfolio-id-generator
+    container_name: portfolio-id-service
     ports:
       - "8095:8095"
     environment:
@@ -13,7 +13,7 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: PMS.2025
     networks:
-      - portfolio-net
-
+      - pms-network
 networks:
-  portfolio-net:
+  pms-network:
+    external: true
