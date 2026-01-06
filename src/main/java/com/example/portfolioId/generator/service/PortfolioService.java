@@ -2,6 +2,7 @@ package com.example.portfolioId.generator.service;
 
 import java.util.UUID;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.example.portfolioId.generator.dto.PortfolioRequest;
@@ -24,6 +25,13 @@ public class PortfolioService {
 
         log.info("Service received phoneNumber={}", req.getPhoneNumber());
 
+        if (investorRepo.existsByPhoneNumber(req.getPhoneNumber())) {
+            log.warn("Duplicate phone number attempt: {}", req.getPhoneNumber());
+            throw new PortfolioCreationException(
+                "Portfolio already exists for this phone number"
+            );
+        }
+
         try {
             UUID newId = UUID.randomUUID();
 
@@ -39,9 +47,17 @@ public class PortfolioService {
 
             return new PortfolioResponse(newId);
 
+        } catch (DataIntegrityViolationException e) {
+            log.error("Unique constraint violation for phoneNumber={}", req.getPhoneNumber(), e);
+            throw new PortfolioCreationException(
+                "Phone number already exists", e
+            );
+
         } catch (Exception e) {
             log.error("Failed to create portfolio", e);
-            throw new PortfolioCreationException("Failed to create portfolio", e);
+            throw new PortfolioCreationException(
+                "Failed to create portfolio", e
+            );
         }
     }
 }

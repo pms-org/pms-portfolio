@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.portfolioId.generator.entity.InvestorDetails;
 
-public interface InvestorDetailsRepository extends JpaRepository<InvestorDetails, UUID> {
+public interface InvestorDetailsRepository 
+        extends JpaRepository<InvestorDetails, UUID> {
 
+    boolean existsByPhoneNumber(Long phoneNumber);
 }
