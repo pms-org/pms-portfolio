@@ -1,6 +1,5 @@
 package com.example.portfolioId.generator.service;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -9,13 +8,9 @@ import org.springframework.stereotype.Service;
 import com.example.portfolioId.generator.dto.PortfolioRequest;
 import com.example.portfolioId.generator.dto.PortfolioResponse;
 import com.example.portfolioId.generator.entity.InvestorDetails;
-import com.example.portfolioId.generator.entity.PortfolioOutbox;
 import com.example.portfolioId.generator.exception.PortfolioCreationException;
 import com.example.portfolioId.generator.repository.InvestorDetailsRepository;
-import com.example.portfolioId.generator.repository.PortfolioOutboxRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,9 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PortfolioService {
 
     private final InvestorDetailsRepository investorRepo;
-    private final PortfolioOutboxRepository outboxRepo;
-    private final ObjectMapper objectMapper;
-    @Transactional
+
     public PortfolioResponse createPortfolio(PortfolioRequest req) {
 
         log.info("Service received phoneNumber={}", req.getPhoneNumber());
@@ -49,16 +42,6 @@ public class PortfolioService {
             investor.setAddress(req.getAddress());
 
             investorRepo.save(investor);
-
-
-            PortfolioOutbox outbox = new PortfolioOutbox();
-            outbox.setId(UUID.randomUUID());
-            outbox.setAggregateId(newId);
-            outbox.setPayload(objectMapper.writeValueAsString(investor));
-            outbox.setStatus("NEW");
-            outbox.setCreatedAt(LocalDateTime.now());
-
-            outboxRepo.save(outbox);
 
             log.info("Saved investor with portfolioId={}", newId);
 
