@@ -4,16 +4,14 @@ services:
   portfolio-service:
     build: .
     container_name: portfolio-id-service
+    env_file:
+      - .env
     ports:
       - "8095:8095"
-    environment:
-      SERVER_PORT: 8095
-
-      DB_URL: jdbc:postgresql://db-instance-pms.cvk4yqey0ex7.us-east-2.rds.amazonaws.com:5432/pms_portfolio_db
-      DB_USERNAME: postgres
-      DB_PASSWORD: PMS.2025
+    restart: unless-stopped
     networks:
       - pms-network
+
 networks:
   pms-network:
     external: true
