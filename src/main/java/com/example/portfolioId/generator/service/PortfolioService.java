@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.example.portfolioId.generator.dto.PortfolioDetailsResponse;
@@ -26,43 +25,38 @@ public class PortfolioService {
 
     public PortfolioResponse createPortfolio(PortfolioRequest req) {
 
-        log.info("Service received phoneNumber={}", req.getPhoneNumber());
+    log.info("Service received phoneNumber={}", req.getPhoneNumber());
 
-        if (investorRepo.existsByPhoneNumber(req.getPhoneNumber())) {
-            log.warn("Duplicate phone number attempt: {}", req.getPhoneNumber());
-            throw new PortfolioCreationException(
-                    "Portfolio already exists for this phone number"
-            );
-        }
-
-        try {
-            UUID newId = UUID.randomUUID();
-
-            InvestorDetails investor = new InvestorDetails();
-            investor.setPortfolioId(newId);
-            investor.setName(req.getName());
-            investor.setPhoneNumber(req.getPhoneNumber());
-            investor.setAddress(req.getAddress());
-
-            investorRepo.save(investor);
-
-            log.info("Saved investor with portfolioId={}", newId);
-
-            return new PortfolioResponse(newId);
-
-        } catch (DataIntegrityViolationException e) {
-            log.error("Unique constraint violation for phoneNumber={}", req.getPhoneNumber(), e);
-            throw new PortfolioCreationException(
-                    "Phone number already exists", e
-            );
-
-        } catch (Exception e) {
-            log.error("Failed to create portfolio", e);
-            throw new PortfolioCreationException(
-                    "Failed to create portfolio", e
-            );
-        }
+    if (investorRepo.existsByPhoneNumber(req.getPhoneNumber())) {
+        log.warn("Duplicate phone number attempt: {}", req.getPhoneNumber());
+        throw new PortfolioCreationException(
+                "Portfolio already exists for this phone number"
+        );
     }
+
+    try {
+        UUID newId = UUID.randomUUID();
+
+        InvestorDetails investor = new InvestorDetails();
+        investor.setPortfolioId(newId);
+        investor.setName(req.getName());
+        investor.setPhoneNumber(req.getPhoneNumber());
+        investor.setAddress(req.getAddress());
+
+        investorRepo.save(investor);
+
+        log.info("Saved investor with portfolioId={}", newId);
+
+        return new PortfolioResponse(newId);
+
+    } catch (Exception e) {
+        log.error("Failed to create portfolio", e);
+        throw new PortfolioCreationException(
+                "Failed to create portfolio", e
+        );
+    }
+}
+
 
     public PortfolioDetailsResponse getPortfolioById(UUID id) {
 
