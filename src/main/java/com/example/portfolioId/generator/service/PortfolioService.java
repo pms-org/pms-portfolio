@@ -1,10 +1,13 @@
 package com.example.portfolioId.generator.service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.example.portfolioId.generator.dto.PortfolioDetailsResponse;
 import com.example.portfolioId.generator.dto.PortfolioRequest;
 import com.example.portfolioId.generator.dto.PortfolioResponse;
 import com.example.portfolioId.generator.entity.InvestorDetails;
@@ -28,7 +31,7 @@ public class PortfolioService {
         if (investorRepo.existsByPhoneNumber(req.getPhoneNumber())) {
             log.warn("Duplicate phone number attempt: {}", req.getPhoneNumber());
             throw new PortfolioCreationException(
-                "Portfolio already exists for this phone number"
+                    "Portfolio already exists for this phone number"
             );
         }
 
@@ -50,14 +53,46 @@ public class PortfolioService {
         } catch (DataIntegrityViolationException e) {
             log.error("Unique constraint violation for phoneNumber={}", req.getPhoneNumber(), e);
             throw new PortfolioCreationException(
-                "Phone number already exists", e
+                    "Phone number already exists", e
             );
 
         } catch (Exception e) {
             log.error("Failed to create portfolio", e);
             throw new PortfolioCreationException(
-                "Failed to create portfolio", e
+                    "Failed to create portfolio", e
             );
         }
+    }
+
+    public PortfolioDetailsResponse getPortfolioById(UUID id) {
+
+        log.info("Fetching portfolio with id={}", id);
+
+        InvestorDetails investor = investorRepo.findById(id)
+                .orElseThrow(() -> new PortfolioCreationException(
+                "Portfolio not found with id: " + id
+        ));
+
+        return new PortfolioDetailsResponse(
+                investor.getPortfolioId(),
+                investor.getName(),
+                investor.getPhoneNumber(),
+                investor.getAddress()
+        );
+    }
+
+    public List<PortfolioDetailsResponse> getAllPortfolios() {
+
+        log.info("Fetching all portfolios");
+
+        return investorRepo.findAll()
+                .stream()
+                .map(investor -> new PortfolioDetailsResponse(
+                investor.getPortfolioId(),
+                investor.getName(),
+                investor.getPhoneNumber(),
+                investor.getAddress()
+        ))
+                .collect(Collectors.toList());
     }
 }
